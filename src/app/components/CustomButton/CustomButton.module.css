@@ -1,0 +1,30 @@
+.LogIn-Button {
+  padding: 0.5rem 1.5rem; /* px-6 py-2 */
+  border: 4px solid black; /* border border-black */
+  border-radius: 9999px; /* rounded-full */
+  font-size: 1.125rem; /* text-lg */
+  transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out; /* transition */
+  color: black;
+}
+
+.LogIn-Button:hover {
+  background-color: #0044ca;
+  color: white;
+  border: 4px solid #0044ca;
+  transform: scale(1.1);
+}
+
+.SignUp-Button {
+  padding: 0.5rem 1.5rem;
+  border: 1px solid black;
+  color: black;
+  border-radius: 9999px;
+  font-size: 1.125rem;
+  transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out; /* transition */
+}
+
+.SignUp-Button:hover {
+  background-color: #0044ca;
+  color: white;
+  transform: scale(1.1);
+}

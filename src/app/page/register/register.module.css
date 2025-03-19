@@ -1,0 +1,25 @@
+.input-field {
+  width: 100%;
+  padding: 12px 16px; /* px-4 py-3 */
+  font-size: 1.25rem; /* text-xl */
+  border: 2px solid black; /* border-2 border-black */
+  border-radius: 8px; /* rounded-lg */
+  outline: none; /* focus:outline-none */
+  color: black;
+  font-weight: semibold; /* text-black */
+}
+
+.input-field::placeholder {
+  color: silver;
+  font-weight: semibold; /* text-black */
+}
+
+.home-icon {
+  width: 2rem; /* w-8 = 8 * 0.25rem = 2rem */
+  height: 2rem; /* h-8 = 8 * 0.25rem = 2rem */
+  color: black; /* text-black */
+}
+
+.home-icon:hover {
+  scale: 1.1;
+}
