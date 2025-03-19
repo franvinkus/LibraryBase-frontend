@@ -23,7 +23,7 @@ export default function RegisterPage() {
           <input type="text" placeholder="Username" className={style["input-field"]} />
           <input type="password" placeholder="Password" className={style["input-field"]} />
           <input type="email" placeholder="Email" className={style["input-field"]} />
-          <SignUpButton onClick={() => console.log("Login")} />
+          <SignUpButton onClick={() => alert("Register")} />
         </div>
       </div>
 
