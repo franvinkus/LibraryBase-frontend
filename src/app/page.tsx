@@ -1,20 +1,19 @@
 "use client";
 import Image from "next/image";
 import { Home } from "lucide-react";
-import Link from "next/link";
-import React from "react";
 import { useRouter } from "next/navigation";
 import SignUpButton from "./components/CustomButton/SignUp";
 import LogInButton from "./components/CustomButton/LogInButton";
 
 export default function HomePage() {
   const router = useRouter();
+
   return (
-    <div className="h-screen flex">
+    <div className="h-screen flex flex-col md:flex-row bg-white ">
       {/* Bagian Kiri - Logo dan Tombol */}
-      <div className="w-1/2 flex flex-col justify-center items-center bg-white relative z-10">
+      <div className="w-full md:w-1/2 h-screen flex flex-col items-center justify-center bg-white relative z-10">
         {/* Logo */}
-        <div className="flex items-center space-x-2 absolute top-6 left-6">
+        <div className="absolute top-6 left-6 flex items-center space-x-2">
           <Home className="w-8 h-8 text-black" />
           <h1 className="text-2xl font-bold">
             <span className="text-blue-600">Library</span>
@@ -22,21 +21,17 @@ export default function HomePage() {
           </h1>
         </div>
 
-        {/* Tombol Login & Sign Up */}
+        {/* Tombol Login & Sign Up (Tengah Layar) */}
         <div className="flex items-center space-x-4">
           <LogInButton onClick={() => router.push("/page/login")} />
-          <span className="text-5xl  text-black ">/</span>
+          <span className="text-5xl text-black">/</span>
           <SignUpButton onClick={() => router.push("/page/register")} />
         </div>
       </div>
-      <div className="w-1/2 relative">
-        <div className="absolute inset-0 bg-white rounded-full h-full w-3/4 left-[-10%] top-1/2 transform -translate-y-1/2 z-0"></div>
-        <Image
-          src="/img/library.png" // Ganti dengan gambar yang diunggah
-          alt="Library Books"
-          layout="fill"
-        />
-        {/* Bagian Kanan - Gambar Rak Buku */}
+
+      {/* Bagian Kanan - Gambar (Disembunyikan di ≤ 768px) */}
+      <div className="w-1/2 h-screen relative hidden md:block">
+        <Image src="/img/library.png" alt="Library Books" layout="fill" />
       </div>
     </div>
   );
