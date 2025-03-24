@@ -23,12 +23,12 @@ const SidebarAdmin = () => {
 
       {/* Navigation */}
       <nav className="flex flex-col space-y-4 mt-5 ml-5">
-        <div className="flex items-center text-gray-700 hover:text-blue-600 hover:scale-125 cursor-pointer transition ease-in-out duration-300" onClick={() => router.push("/page/category")}>
+        <div className="flex items-center text-gray-700 hover:text-blue-600 hover:scale-125 cursor-pointer transition ease-in-out duration-300" onClick={() => router.push("/page/admin/category")}>
           <List size={20} className="mr-2" />
           Category
         </div>
 
-        <div className="flex items-center text-gray-700 hover:text-blue-600 hover:scale-125 cursor-pointer transition ease-in-out duration-300" onClick={() => router.push("/page/mylibrary")}>
+        <div className="flex items-center text-gray-700 hover:text-blue-600 hover:scale-125 cursor-pointer transition ease-in-out duration-300" onClick={() => router.push("/page/admin/manage")}>
           <Book size={20} className="mr-2" />
           Manage
         </div>

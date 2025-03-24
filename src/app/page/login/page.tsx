@@ -37,8 +37,8 @@ export default function LoginPage() {
     <div className="flex h-screen w-full bg-white">
       {/* Left Side (Login Form) */}
       <div className="w-1/2 flex flex-col justify-center items-center bg-white p-10 relative">
-        <div className="absolute top-5 left-5 flex items-center gap-2">
-          <Home className="w-8 h-8 text-black hover:scale-110 cursor-pointer" onClick={() => router.push("/")} />
+        <div className="absolute top-5 left-5 flex items-center gap-2 hover:scale-110 transiion ease-in-out duration-300" onClick={() => router.push("/")}>
+          <Home className="w-8 h-8 text-black hover:scale-110 cursor-pointer" />
           <span className="text-2xl font-bold">
             <span className="text-blue-600">Library</span>
             <span className="text-black">Base</span>

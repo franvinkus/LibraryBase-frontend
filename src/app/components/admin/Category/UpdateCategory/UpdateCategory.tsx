@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 
-export default function DeleteCategory({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
+export default function UpdateCategory({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const [categoryName, setCategoryName] = useState("");
   const [updateBy, setUpdateBy] = useState("");
 
@@ -16,25 +16,25 @@ export default function DeleteCategory({ isOpen, onClose }: { isOpen: boolean; o
         </button>
 
         {/* Title */}
-        <h2 className="text-xl font-bold mb-4 text-center">Categories</h2>
+        <h2 className="text-xl font-bold mb-4 text-center text-black">Categories</h2>
 
         {/* Input Fields */}
         <div className="mb-4">
           <label className="block text-gray-700 font-medium mb-1">Categories Name</label>
-          <input type="text" className="w-full px-3 py-2 border rounded-md bg-gray-200 focus:outline-none" placeholder="Categories Name" value={categoryName} onChange={(e) => setCategoryName(e.target.value)} />
+          <input type="text" className="w-full px-3 py-2  rounded-md bg-gray-200 focus:outline-none text-black" placeholder="Categories Name" value={categoryName} onChange={(e) => setCategoryName(e.target.value)} />
         </div>
 
         <div className="mb-4">
           <label className="block text-gray-700 font-medium mb-1">Update By</label>
-          <input type="text" className="w-full px-3 py-2 border rounded-md bg-gray-200 focus:outline-none" placeholder="Update By" value={updateBy} onChange={(e) => setUpdateBy(e.target.value)} />
+          <input type="text" className="w-full px-3 py-2 rounded-md bg-gray-200 focus:outline-none text-black" placeholder="Update By" value={updateBy} onChange={(e) => setUpdateBy(e.target.value)} />
         </div>
 
         {/* Buttons */}
         <div className="flex justify-between mt-4">
-          <button onClick={onClose} className="px-4 py-2 border border-black rounded-md hover:bg-gray-200 transition">
+          <button onClick={onClose} className="px-4 py-2 bg-[#E4F0FE] text-gray-700 rounded-lg hover:bg-blue-600 hover:text-white hover:scale-105 transision ease-in-out duration-300">
             Cancel
           </button>
-          <button className="px-4 py-2 border border-black rounded-md bg-blue-600 text-white hover:bg-blue-700 transition">Create</button>
+          <button className="px-4 py-2 bg-[#E4F0FE] text-gray-700 rounded-lg hover:bg-blue-600 hover:text-white hover:scale-105 transision ease-in-out duration-300">Create</button>
         </div>
       </div>
     </div>

@@ -3,10 +3,82 @@ import { useState } from "react";
 import Navbar from "@/app/components/Navbar/navbar";
 import Sidebar from "@/app/components/Sidebar/Sidebar";
 import BookCard from "@/app/components/BookCard/BookCard";
+import BookPopup from "@/app/components/BookCardPopUp/BookCardPopUp";
 import { Menu } from "lucide-react";
 
 export default function History() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [selectedBook, setSelectedBook] = useState({
+    title: "",
+    author: "",
+    description: "",
+    image: "",
+  });
+
+  // Dummy data buku
+  const books = [
+    {
+      title: "Harry Potter",
+      author: "J.K. Rowling",
+      description: "A story about a young wizard.",
+      image: "/harry-potter.jpg",
+    },
+    {
+      title: "The Hobbit",
+      author: "J.R.R. Tolkien",
+      description: "An adventure of a hobbit named Bilbo Baggins.",
+      image: "/the-hobbit.jpg",
+    },
+    {
+      title: "Rich Dad Poor Dad",
+      author: "Robert Kiyosaki",
+      description: "A book about financial education.",
+      image: "/rich-dad-poor-dad.jpg",
+    },
+    {
+      title: "Harry Potter",
+      author: "J.K. Rowling",
+      description: "A story about a young wizard.",
+      image: "/harry-potter.jpg",
+    },
+    {
+      title: "The Hobbit",
+      author: "J.R.R. Tolkien",
+      description: "An adventure of a hobbit named Bilbo Baggins.",
+      image: "/the-hobbit.jpg",
+    },
+    {
+      title: "Rich Dad Poor Dad",
+      author: "Robert Kiyosaki",
+      description: "A book about financial education.",
+      image: "/rich-dad-poor-dad.jpg",
+    },
+    {
+      title: "Harry Potter",
+      author: "J.K. Rowling",
+      description: "A story about a young wizard.",
+      image: "/harry-potter.jpg",
+    },
+    {
+      title: "The Hobbit",
+      author: "J.R.R. Tolkien",
+      description: "An adventure of a hobbit named Bilbo Baggins.",
+      image: "/the-hobbit.jpg",
+    },
+    {
+      title: "Rich Dad Poor Dad",
+      author: "Robert Kiyosaki",
+      description: "A book about financial education.",
+      image: "/rich-dad-poor-dad.jpg",
+    },
+  ];
+
+  // Fungsi untuk menampilkan popup
+  const handleBookClick = (book: typeof selectedBook) => {
+    setSelectedBook(book);
+    setIsPopupOpen(true);
+  };
 
   return (
     <div className="flex h-screen bg-gray-100">
@@ -41,14 +113,19 @@ export default function History() {
             </div>
 
             {/* Book Card Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
-              {Array.from({ length: 16 }).map((_, index) => (
-                <BookCard key={index} />
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 mt-4">
+              {books.map((book, index) => (
+                <div key={index} onClick={() => handleBookClick(book)} className="cursor-pointer">
+                  <BookCard book={book} />
+                </div>
               ))}
             </div>
           </div>
         </section>
       </main>
+
+      {/* Popup Detail Buku */}
+      <BookPopup isOpen={isPopupOpen} onClose={() => setIsPopupOpen(false)} book={selectedBook} />
     </div>
   );
 }
