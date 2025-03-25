@@ -8,44 +8,43 @@ import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
   const router = useRouter();
-  const [username, setUsername] = useState("");
+  const [identifier, setIdentifier] = useState(""); // Bisa username atau email
   const [password, setPassword] = useState("");
-  const [email, setEmail] = useState("");
   const [error, setError] = useState("");
 
   const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://localhost:7055";
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post(
-        `${API_BASE_URL}/api/LibraryBase/Auth/LogIn`,
-        { userName: username, password },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-        }
-      );
+      // Cek apakah input adalah email (mengandung "@")
+      const isEmail = identifier.includes("@");
+
+      // Bentuk request body sesuai input
+      const requestBody = isEmail ? { email: identifier, password } : { userName: identifier, password };
+
+      const response = await axios.post(`${API_BASE_URL}/api/LibraryBase/Auth/LogIn`, requestBody, {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      });
 
       if (response.data) {
-        const { token, data } = response.data; // Ambil token dan data
-        const { userId, userName, msg } = data; // Ambil detail user
+        const { token, data } = response.data;
+        const { userId, userName, msg } = data;
 
         if (!token) {
           setError("⚠️ Token tidak ditemukan dalam response.");
           return;
         }
 
-        // ✅ Simpan token & user data ke localStorage
         localStorage.setItem("authToken", token);
         localStorage.setItem("userId", userId);
         localStorage.setItem("userName", userName);
-        localStorage.setItem("userRole", msg.includes("Admin") ? "Admin" : "User"); // Tentukan role
+        localStorage.setItem("userRole", msg.includes("Admin") ? "Admin" : "User");
 
         console.log("User Role:", localStorage.getItem("userRole"));
 
-        // ✅ Redirect berdasarkan role
         if (msg.includes("Admin")) {
           router.push("/page/admin/category");
         } else {
@@ -79,12 +78,13 @@ export default function LoginPage() {
 
         <div className="w-3/4 md:w-2/3 lg:w-1/2 space-y-6">
           {error && <p className="text-red-500">{error}</p>}
+          {/* ✅ Input bisa diisi dengan username atau email */}
           <input
             type="text"
-            placeholder="Username"
+            placeholder="Username or Email"
             className="w-full px-4 py-3 text-xl border-2 border-black rounded-lg outline-none text-black font-semibold placeholder:text-gray-400"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            value={identifier}
+            onChange={(e) => setIdentifier(e.target.value)}
           />
           <input
             type="password"
@@ -93,13 +93,6 @@ export default function LoginPage() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <input
-            type="email"
-            placeholder="Email"
-            className="w-full px-4 py-3 text-xl border-2 border-black rounded-lg outline-none text-black font-semibold placeholder:text-gray-400"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
           <LogInButton onClick={handleLogin} />
         </div>
       </div>
@@ -107,12 +100,7 @@ export default function LoginPage() {
       {/* Right Side (Image with Wave Shape) */}
       <div className="w-1/2 relative">
         <div className="absolute inset-0 bg-white rounded-full h-full w-3/4 left-[-10%] top-1/2 transform -translate-y-1/2 z-0"></div>
-        <Image
-          src="/img/library.png" // Ganti dengan gambar yang diunggah
-          alt="Library Books"
-          layout="fill"
-          className="object-cover"
-        />
+        <Image src="/img/library.png" alt="Library Books" layout="fill" className="object-cover" />
       </div>
     </div>
   );

@@ -26,7 +26,15 @@ export default function RegisterPage() {
       console.log(response.data); // Redirect setelah login sukses
     } catch (err) {
       if (axios.isAxiosError(err)) {
-        setError(err.response?.data?.message || "Login failed");
+        if (err.response && err.response.data && err.response.data.errors) {
+          // Ambil semua error dari response API
+          const errorMessages = Object.values(err.response.data.errors)
+            .flat() // Menggabungkan array nested menjadi satu array
+            .join("\n"); // Gabungkan pesan dengan newline
+          setError(errorMessages);
+        } else {
+          setError(err.response?.data?.message || "Email Sudah Terdaftar / Username sudah pernah digunakan");
+        }
       } else {
         setError("An unexpected error occurred");
       }

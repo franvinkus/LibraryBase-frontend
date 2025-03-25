@@ -74,8 +74,8 @@ export default function Manage() {
               </div>
             </div>
             {isAddModalOpen && <AddCategory isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)} />}
-            {isUpdateModalOpen && <UpdateCategory isOpen={isUpdateModalOpen} onClose={() => setIsUpdateModalOpen(false)} />}
-            {isDeleteModalOpen && <DeleteCategory isOpen={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)} />}
+            {/* {isUpdateModalOpen && <UpdateCategory isOpen={isUpdateModalOpen} onClose={() => setIsUpdateModalOpen(false)} />}
+            {isDeleteModalOpen && <DeleteCategory isOpen={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)} />} */}
           </div>
         </section>
       </main>
