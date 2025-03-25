@@ -1,11 +1,62 @@
 "use client";
 import { useState } from "react";
+import axios from "axios";
 
-export default function UpdateCategory({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
-  const [categoryName, setCategoryName] = useState("");
-  const [updateBy, setUpdateBy] = useState("");
+// Interface untuk props komponen
+interface UpdateCategoryProps {
+  isOpen: boolean;
+  onClose: () => void;
+  categoryId: number | null;
+}
 
-  if (!isOpen) return null; // Jangan render modal jika tidak dibuka
+// Interface untuk request body API
+interface UpdateCategoryRequest {
+  categoryName: string;
+}
+
+export default function UpdateCategory({ isOpen, onClose, categoryId }: UpdateCategoryProps) {
+  const [categoryName, setCategoryName] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
+
+  if (!isOpen || categoryId === null) return null; // Jangan tampilkan modal jika ID kategori tidak valid
+
+  const handleUpdate = async () => {
+    try {
+      setLoading(true);
+      setError("");
+
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://localhost:7055";
+      const token = localStorage.getItem("authToken");
+
+      if (!token) {
+        setError("User session expired! Please login again.");
+        setLoading(false);
+        return;
+      }
+
+      const requestBody: UpdateCategoryRequest = {
+        categoryName,
+      };
+
+      const response = await axios.put(`${API_BASE_URL}/api/LibraryBase/CRUD/Edit-Category/${categoryId}`, requestBody, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.status === 200) {
+        alert("Category updated successfully!");
+        onClose();
+        window.location.reload();
+      }
+    } catch (err) {
+      setError("Failed to update category. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-md flex justify-center items-center z-50">
@@ -16,25 +67,25 @@ export default function UpdateCategory({ isOpen, onClose }: { isOpen: boolean; o
         </button>
 
         {/* Title */}
-        <h2 className="text-xl font-bold mb-4 text-center text-black">Categories</h2>
+        <h2 className="text-xl font-bold mb-4 text-center text-black">Update Category</h2>
+
+        {/* Error Message */}
+        {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
 
         {/* Input Fields */}
         <div className="mb-4">
-          <label className="block text-gray-700 font-medium mb-1">Categories Name</label>
-          <input type="text" className="w-full px-3 py-2  rounded-md bg-gray-200 focus:outline-none text-black" placeholder="Categories Name" value={categoryName} onChange={(e) => setCategoryName(e.target.value)} />
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-gray-700 font-medium mb-1">Update By</label>
-          <input type="text" className="w-full px-3 py-2 rounded-md bg-gray-200 focus:outline-none text-black" placeholder="Update By" value={updateBy} onChange={(e) => setUpdateBy(e.target.value)} />
+          <label className="block text-gray-700 font-medium mb-1">Category Name</label>
+          <input type="text" className="w-full px-3 py-2 rounded-md bg-gray-200 focus:outline-none text-black" placeholder="Enter category name" value={categoryName} onChange={(e) => setCategoryName(e.target.value)} />
         </div>
 
         {/* Buttons */}
         <div className="flex justify-between mt-4">
-          <button onClick={onClose} className="px-4 py-2 bg-[#E4F0FE] text-gray-700 rounded-lg hover:bg-blue-600 hover:text-white hover:scale-105 transision ease-in-out duration-300">
+          <button onClick={onClose} className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 hover:scale-105 transition duration-300">
             Cancel
           </button>
-          <button className="px-4 py-2 bg-[#E4F0FE] text-gray-700 rounded-lg hover:bg-blue-600 hover:text-white hover:scale-105 transision ease-in-out duration-300">Create</button>
+          <button onClick={handleUpdate} className={`px-4 py-2 rounded-lg hover:scale-105 transition duration-300 ${loading ? "bg-gray-400 text-gray-700 cursor-not-allowed" : "bg-blue-500 text-white hover:bg-blue-600"}`} disabled={loading}>
+            {loading ? "Updating..." : "Update"}
+          </button>
         </div>
       </div>
     </div>
