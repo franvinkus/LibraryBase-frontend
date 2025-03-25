@@ -4,12 +4,10 @@ import axios from "axios";
 import { Pencil, Trash2, Plus } from "lucide-react";
 import SidebarAdmin from "@/app/components/admin/SidebarAdmin/SidebarAdmin";
 import NavbarAdmin from "@/app/components/admin/NavbarAdmin/NavbarAdmin";
-import AddCategory from "@/app/components/admin/Category/AddCategory/AddCategory";
-import UpdateCategory from "@/app/components/admin/Category/UpdateCategory/UpdateCategory";
-import DeleteCategory from "@/app/components/admin/Category/DeleteCategory/DeletCategory";
-import { useRouter } from "next/navigation";
+import AddBook from "@/app/components/admin/Book/AddBook/AddBook";
+import DeleteBook from "@/app/components/admin/Book/DeleteBook/DeleteBook";
 
-export default function AdminDashboardCategory() {
+export default function AdminDashboardBook() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -18,7 +16,6 @@ export default function AdminDashboardCategory() {
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
   const [selectedCategoryName, setSelectedCategoryName] = useState<string | null>(null);
   const [categories, setCategories] = useState<{ cateId: number; cateName: string; createdAt: string; updatedAt: string }[]>([]);
-  const [Router] = useState(useRouter());
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -27,7 +24,6 @@ export default function AdminDashboardCategory() {
         const token = localStorage.getItem("authToken");
         if (!token) {
           throw new Error("User session expired! Please login again.");
-          Router.push("/page/login");
         }
 
         const response = await axios.get(`${API_BASE_URL}/api/LibraryBase/CRUD/Get-Category`, {
@@ -57,7 +53,7 @@ export default function AdminDashboardCategory() {
           <div className="relative">
             <div className="bg-white shadow-lg rounded-lg p-6">
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-lg font-bold text-black">Categories</h2>
+                <h2 className="text-lg font-bold text-black">Book List</h2>
                 <button className="bg-[#D9D9D9] p-2 rounded-lg hover:text-white hover:bg-blue-700 hover:scale-110 transition ease-in-out duration-300" onClick={() => setIsAddModalOpen(true)}>
                   <Plus size={20} />
                 </button>
@@ -115,8 +111,8 @@ export default function AdminDashboardCategory() {
             </div>
 
             {/* Modal Components */}
-            {isAddModalOpen && <AddCategory isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)} />}
-            {isUpdateModalOpen && selectedCategoryId !== null && (
+            {isAddModalOpen && <AddBook isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)} />}
+            {/* {isUpdateModalOpen && selectedCategoryId !== null && (
               <UpdateCategory
                 isOpen={isUpdateModalOpen}
                 onClose={() => {
@@ -125,9 +121,9 @@ export default function AdminDashboardCategory() {
                 }}
                 categoryId={selectedCategoryId}
               />
-            )}
+            )} */}
             {isDeleteModalOpen && selectedCategoryId !== null && (
-              <DeleteCategory
+              <DeleteBook
                 isOpen={isDeleteModalOpen}
                 onClose={() => {
                   setIsDeleteModalOpen(false);

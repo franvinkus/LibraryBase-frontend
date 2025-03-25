@@ -39,24 +39,15 @@ export default function AddCategory({ isOpen, onClose }: { isOpen: boolean; onCl
           headers: {
             "Content-Type": "application/json",
             Accept: "application/json",
-            Authorization: `Bearer ${token}`, // ✅ Kirim JWT di header
+            Authorization: `Bearer ${token}`,
           },
         }
       );
-      console.log("🔑 Sending Token:", `Bearer ${token}`);
-
-      console.log("📌 Fetching to:", `${API_BASE_URL}/api/LibraryBase/CRUD/Add-Category`);
-      console.log("📌 Headers:", {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        Authorization: `Bearer ${token}`,
-      });
-      console.log("📌 Body:", { categoryName });
 
       if (response.status === 200) {
-        setMessage("✅ Category added successfully!");
-        setCategoryName("");
-        setTimeout(() => {}, 1000);
+        alert(" ✅ Category Added successfully!");
+        onClose();
+        window.location.reload();
       } else {
         console.error("⚠️ API Error:", response.data);
         throw new Error(response.data.message || "Failed to add category");
@@ -104,7 +95,7 @@ export default function AddCategory({ isOpen, onClose }: { isOpen: boolean; onCl
 
         {/* Buttons */}
         <div className="flex justify-between mt-4">
-          <button onClick={onClose} className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition ease-in-out duration-300">
+          <button onClick={onClose} className="px-4 py-2 bg-[#E4F0FE] text-gray-700 rounded-lg hover:bg-blue-600 hover:text-white hover:scale-105 transision ease-in-out duration-300">
             Cancel
           </button>
           <button onClick={handleSubmit} disabled={loading} className={`px-4 py-2 rounded-lg transition ease-in-out duration-300 ${loading ? "bg-gray-400 text-white" : "bg-blue-600 text-white hover:bg-blue-700 hover:scale-105"}`}>

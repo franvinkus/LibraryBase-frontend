@@ -80,7 +80,7 @@ export default function UpdateCategory({ isOpen, onClose, categoryId }: UpdateCa
 
         {/* Buttons */}
         <div className="flex justify-between mt-4">
-          <button onClick={onClose} className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 hover:scale-105 transition duration-300">
+          <button onClick={onClose} className="px-4 py-2 bg-[#E4F0FE] text-gray-700 rounded-lg hover:bg-blue-600 hover:text-white hover:scale-105 transision ease-in-out duration-300">
             Cancel
           </button>
           <button onClick={handleUpdate} className={`px-4 py-2 rounded-lg hover:scale-105 transition duration-300 ${loading ? "bg-gray-400 text-gray-700 cursor-not-allowed" : "bg-blue-500 text-white hover:bg-blue-600"}`} disabled={loading}>

@@ -8,7 +8,7 @@ import UpdateCategory from "@/app/components/admin/Category/UpdateCategory/Updat
 import DeleteCategory from "@/app/components/admin/Category/DeleteCategory/DeletCategory";
 import { Pencil, Trash2, Plus } from "lucide-react";
 
-export default function Manage() {
+export default function AdminDashboardManage() {
   const categories = [
     { id: 1, name: "Romance", created_at: "2025-03-20", updated_at: "2025-03-20", created_by: 1, updated_by: "NULL" },
     { id: 2, name: "Horror", created_at: "2025-03-18", updated_at: "2025-03-19", created_by: 2, updated_by: 3 },

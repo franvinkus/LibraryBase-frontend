@@ -2,14 +2,14 @@
 import { useState } from "react";
 import axios from "axios";
 
-interface DeleteCategoryProps {
+interface DeleteBookProps {
   isOpen: boolean;
   onClose: () => void;
   categoryId: number | null;
   categoryName: string | null;
 }
 
-export default function DeleteCategory({ isOpen, onClose, categoryId, categoryName }: DeleteCategoryProps) {
+export default function DeleteBook({ isOpen, onClose, categoryId, categoryName }: DeleteBookProps) {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
 
@@ -38,7 +38,7 @@ export default function DeleteCategory({ isOpen, onClose, categoryId, categoryNa
       });
 
       if (response.status === 200) {
-        alert(" Category deleted successfully!");
+        alert("Category deleted successfully!");
         onClose();
         window.location.reload();
       }
@@ -58,11 +58,11 @@ export default function DeleteCategory({ isOpen, onClose, categoryId, categoryNa
         </button>
 
         {/* Title */}
-        <h2 className="text-xl font-bold mb-4 text-center text-black">Delete Category</h2>
+        <h2 className="text-xl font-bold mb-4 text-center text-black">Delete Book</h2>
 
         {/* Input Fields */}
         <div className="mb-4">
-          <label className="block text-gray-700 font-medium mb-1">Categories Name</label>
+          <label className="block text-gray-700 font-medium mb-1">Title Book</label>
           <input type="text" className="w-full px-3 py-2 rounded-md bg-gray-200 focus:outline-none text-black" placeholder={categoryName ?? "Category Name"} readOnly value={categoryName ?? ""} />
         </div>
 
