@@ -1,19 +1,20 @@
 "use client";
 import { useState } from "react";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 interface DeleteBookProps {
   isOpen: boolean;
   onClose: () => void;
-  categoryId: number | null;
-  categoryName: string | null;
+  bookId: number | null;
+  title: string | null;
 }
 
-export default function DeleteBook({ isOpen, onClose, categoryId, categoryName }: DeleteBookProps) {
+export default function DeleteBook({ isOpen, onClose, bookId, title }: DeleteBookProps) {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
 
-  if (!isOpen || categoryId === null) return null;
+  if (!isOpen || bookId === null) return null;
 
   const handleDelete = async () => {
     try {
@@ -29,8 +30,8 @@ export default function DeleteBook({ isOpen, onClose, categoryId, categoryName }
         setLoading(false);
         return;
       }
-      const id = categoryId;
-      const response = await axios.delete(`${API_BASE_URL}/api/LibraryBase/CRUD/${id}`, {
+      const id = bookId;
+      const response = await axios.delete(`${API_BASE_URL}/api/Books/Delete-Book/${id}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -38,9 +39,15 @@ export default function DeleteBook({ isOpen, onClose, categoryId, categoryName }
       });
 
       if (response.status === 200) {
-        alert("Category deleted successfully!");
-        onClose();
-        window.location.reload();
+        Swal.fire({
+          title: "Good job!",
+          text: "Delete Book Successfully!",
+          icon: "success",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.reload(); // Reload halaman setelah menekan OK
+          }
+        });
       }
     } catch (err) {
       setError("Failed to delete category");
@@ -63,7 +70,7 @@ export default function DeleteBook({ isOpen, onClose, categoryId, categoryName }
         {/* Input Fields */}
         <div className="mb-4">
           <label className="block text-gray-700 font-medium mb-1">Title Book</label>
-          <input type="text" className="w-full px-3 py-2 rounded-md bg-gray-200 focus:outline-none text-black" placeholder={categoryName ?? "Category Name"} readOnly value={categoryName ?? ""} />
+          <input type="text" className="w-full px-3 py-2 rounded-md bg-gray-200 focus:outline-none text-black" placeholder={title ?? "Book Title"} readOnly value={title ?? ""} />
         </div>
 
         {/* Buttons */}

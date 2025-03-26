@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 export default function AddBook({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const [loading, setLoading] = useState(false);
@@ -11,6 +12,7 @@ export default function AddBook({ isOpen, onClose }: { isOpen: boolean; onClose:
   const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
   const [description, setDescription] = useState("");
   const [categories, setCategories] = useState<{ cateId: number; cateName: string }[]>([]);
+  const [imgFile, setImgFile] = useState<File | null>(null);
 
   const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://localhost:7055";
 
@@ -50,19 +52,24 @@ export default function AddBook({ isOpen, onClose }: { isOpen: boolean; onClose:
     setSelectedCategories((prev) => prev.filter((id) => id !== categoryId));
   };
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setImgFile(e.target.files[0]);
+    }
+  };
+
   const handleSubmit = async () => {
-    if (!title.trim() || !author.trim() || selectedCategories.length === 0 || !description.trim()) {
+    if (!title.trim() || !author.trim() || selectedCategories.length === 0 || !description.trim() || !imgFile) {
       alert("⚠️ Semua field harus diisi!");
       return;
     }
 
-    // Pastikan categoryIds berupa angka
-    const newBook = {
-      categoryIds: selectedCategories.map(Number), // Pastikan array berisi angka
-      title,
-      author,
-      description,
-    };
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("author", author);
+    formData.append("description", description);
+    formData.append("imgFile", imgFile);
+    selectedCategories.forEach((category) => formData.append("categoryIds", category.toString()));
 
     try {
       setLoading(true);
@@ -71,21 +78,24 @@ export default function AddBook({ isOpen, onClose }: { isOpen: boolean; onClose:
         throw new Error("User session expired! Please login again.");
       }
 
-      const response = await axios.post(
-        `${API_BASE_URL}/api/Books/Add-Book`,
-        JSON.stringify(newBook), // Konversi ke JSON string
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.post(`${API_BASE_URL}/api/Books/Add-Book`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       console.log("Success:", response.data);
-      alert("✅ Buku berhasil ditambahkan!");
-      onClose();
+      Swal.fire({
+        title: "Good job!",
+        text: "Add Book Successfully!",
+        icon: "success",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          window.location.reload();
+        }
+      });
     } catch (err) {
       console.error("Error adding book:", err);
       setError("❌ Gagal menambahkan buku.");
@@ -93,7 +103,6 @@ export default function AddBook({ isOpen, onClose }: { isOpen: boolean; onClose:
       setLoading(false);
     }
   };
-
   return isOpen ? (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-md flex justify-center items-center z-50">
       <div className="bg-white rounded-lg p-6 shadow-lg w-[400px]">
@@ -134,6 +143,9 @@ export default function AddBook({ isOpen, onClose }: { isOpen: boolean; onClose:
             <p className="text-gray-500 text-sm">No categories selected</p>
           )}
         </div>
+
+        <label className="block text-sm font-semibold text-gray-700 mt-3">Upload Image</label>
+        <input type="file" className="w-full px-4 py-2 border rounded-lg text-black" onChange={handleFileChange} />
 
         <label className="block text-sm font-semibold text-gray-700 mt-3">Description</label>
         <textarea className="w-full px-4 py-2 border rounded-lg text-black" value={description} onChange={(e) => setDescription(e.target.value)}></textarea>

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 export default function AddCategory({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const [categoryName, setCategoryName] = useState("");
@@ -45,9 +46,15 @@ export default function AddCategory({ isOpen, onClose }: { isOpen: boolean; onCl
       );
 
       if (response.status === 200) {
-        alert(" ✅ Category Added successfully!");
-        onClose();
-        window.location.reload();
+        Swal.fire({
+          title: "Good job!",
+          text: "Add Category Successfully!",  
+          icon: "success",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.reload(); // Reload halaman setelah menekan OK
+          }
+        });
       } else {
         console.error("⚠️ API Error:", response.data);
         throw new Error(response.data.message || "Failed to add category");

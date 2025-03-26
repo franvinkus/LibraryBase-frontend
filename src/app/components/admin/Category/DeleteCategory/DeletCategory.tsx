@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 interface DeleteCategoryProps {
   isOpen: boolean;
@@ -38,9 +39,15 @@ export default function DeleteCategory({ isOpen, onClose, categoryId, categoryNa
       });
 
       if (response.status === 200) {
-        alert(" Category deleted successfully!");
-        onClose();
-        window.location.reload();
+            Swal.fire({
+                title: "Good job!",
+                text: "Delete Category Successfully!",
+                icon: "success",
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  window.location.reload(); // Reload halaman setelah menekan OK
+                }
+              });
       }
     } catch (err) {
       setError("Failed to delete category");

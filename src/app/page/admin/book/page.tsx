@@ -6,6 +6,7 @@ import SidebarAdmin from "@/app/components/admin/SidebarAdmin/SidebarAdmin";
 import NavbarAdmin from "@/app/components/admin/NavbarAdmin/NavbarAdmin";
 import AddBook from "@/app/components/admin/Book/AddBook/AddBook";
 import DeleteBook from "@/app/components/admin/Book/DeleteBook/DeleteBook";
+import UpdateBook from "@/app/components/admin/Book/UpdateBook/UpdateBook";
 
 export default function AdminDashboardBook() {
   const [loading, setLoading] = useState(true);
@@ -13,20 +14,24 @@ export default function AdminDashboardBook() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
-  const [selectedCategoryName, setSelectedCategoryName] = useState<string | null>(null);
-  const [categories, setCategories] = useState<{ cateId: number; cateName: string; createdAt: string; updatedAt: string }[]>([]);
+  const [selectedbookId, setSelectedbookId] = useState<number | null>(null);
+  const [selectedtitle, setselectedtitle] = useState<string | null>(null);
+
+  const [books, setbooks] = useState<{ bookId: number; title: string; author: string; categoryIds: number[]; description: string; createdAt: string; updatedAt: string; imageUrl: string }[]>([]);
 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://localhost:7055";
         const token = localStorage.getItem("authToken");
+
         if (!token) {
           throw new Error("User session expired! Please login again.");
         }
 
-        const response = await axios.get(`${API_BASE_URL}/api/LibraryBase/CRUD/Get-Category`, {
+        console.log("Fetching books from:", `${API_BASE_URL}/api/Books/Get-Books`);
+
+        const response = await axios.get(`${API_BASE_URL}/api/Books/Get-Books`, {
           headers: {
             "Content-Type": "application/json",
             Accept: "application/json",
@@ -34,13 +39,16 @@ export default function AdminDashboardBook() {
           },
         });
 
-        setCategories(response.data);
+        console.log("Books Data:", response.data);
+        setbooks(response.data);
       } catch (err) {
-        setError("Failed to fetch categories");
+        console.error("Error fetching books:", err);
+        setError("Failed to fetch books");
       } finally {
         setLoading(false);
       }
     };
+
     fetchCategories();
   }, []);
 
@@ -68,24 +76,43 @@ export default function AdminDashboardBook() {
                     <thead>
                       <tr className="bg-[#D9D9D9] text-black rounded-t-lg">
                         <th className="p-3">ID</th>
-                        <th className="p-3">Category Name</th>
+                        <th className="p-3">Book Title</th>
+                        <th className="p-3">Author</th>
+                        <th className="p-3">Category</th>
+                        <th className="p-3">Description</th>
+                        <th className="p-3">Image</th>
                         <th className="p-3">Created At</th>
                         <th className="p-3">Updated At</th>
                         <th className="p-3">Actions</th>
                       </tr>
                     </thead>
                     <tbody className="rounded-b-lg">
-                      {categories.map((category) => (
-                        <tr key={category.cateId} className="text-center border-b last:rounded-b-lg text-black">
-                          <td className="p-3">{category.cateId}</td>
-                          <td className="p-3">{category.cateName}</td>
-                          <td className="p-3">{category.createdAt}</td>
-                          <td className="p-3">{category.updatedAt}</td>
+                      {books.map((book) => (
+                        <tr key={book.bookId} className="text-center border-b last:rounded-b-lg text-black">
+                          <td className="p-3">{book.bookId}</td>
+                          <td className="p-3">{book.title}</td>
+                          <td className="p-3">{book.author}</td>
+                          <td className="p-3">{book.categoryIds.join(", ")}</td>
+                          <td className="p-3">{book.description}</td>
+
+                          <td className="p-3">
+                            {book.imageUrl ? (
+                              <>
+                                {console.log("Image URL:", book.imageUrl)}
+                                <img src={book.imageUrl} alt={book.title} className="w-16 h-16 object-cover rounded-lg" />
+                              </>
+                            ) : (
+                              <span>No Image</span>
+                            )}
+                          </td>
+
+                          <td className="p-3">{book.createdAt}</td>
+                          <td className="p-3">{book.updatedAt}</td>
                           <td className="p-3 flex justify-center gap-2">
                             <button
                               className="text-blue-500 hover:text-blue-700 hover:scale-125 transition ease-in-out duration-300"
                               onClick={() => {
-                                setSelectedCategoryId(category.cateId);
+                                setSelectedbookId(book.bookId);
                                 setIsUpdateModalOpen(true);
                               }}
                             >
@@ -94,8 +121,8 @@ export default function AdminDashboardBook() {
                             <button
                               className="text-red-500 hover:text-red-700 hover:scale-125 transition ease-in-out duration-300"
                               onClick={() => {
-                                setSelectedCategoryId(category.cateId);
-                                setSelectedCategoryName(category.cateName);
+                                setSelectedbookId(book.bookId);
+                                setselectedtitle(book.title);
                                 setIsDeleteModalOpen(true);
                               }}
                             >
@@ -112,25 +139,27 @@ export default function AdminDashboardBook() {
 
             {/* Modal Components */}
             {isAddModalOpen && <AddBook isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)} />}
-            {/* {isUpdateModalOpen && selectedCategoryId !== null && (
-              <UpdateCategory
+
+            {isUpdateModalOpen && selectedbookId !== null && (
+              <UpdateBook
                 isOpen={isUpdateModalOpen}
                 onClose={() => {
                   setIsUpdateModalOpen(false);
-                  setSelectedCategoryId(null);
+                  setSelectedbookId(null);
                 }}
-                categoryId={selectedCategoryId}
+                bookId={selectedbookId}
               />
-            )} */}
-            {isDeleteModalOpen && selectedCategoryId !== null && (
+            )}
+
+            {isDeleteModalOpen && selectedbookId !== null && (
               <DeleteBook
                 isOpen={isDeleteModalOpen}
                 onClose={() => {
                   setIsDeleteModalOpen(false);
-                  setSelectedCategoryId(null);
+                  setSelectedbookId(null);
                 }}
-                categoryId={selectedCategoryId}
-                categoryName={selectedCategoryName}
+                bookId={selectedbookId}
+                title={selectedtitle}
               />
             )}
           </div>

@@ -1,9 +1,26 @@
 "use client";
 import { User, LogOut, Book, Download, Clock, List } from "lucide-react";
 import { useRouter } from "next/navigation";
+import Swal from "sweetalert2";
 
 const SidebarAdmin = () => {
   const router = useRouter();
+
+  const handleLogout = () => {
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("userName");
+
+    Swal.fire({
+      icon: "success",
+      title: "Logout Success",
+      text: "You have been logged out successfully.",
+      showConfirmButton: false,
+      timer: 1500,
+    }).then(() => {
+      router.push("/page/login");
+    });
+  };
 
   return (
     <aside className="w-64 h-screen bg-white shadow-md p-6 mt-20 flex flex-col space-y-10">
@@ -13,7 +30,7 @@ const SidebarAdmin = () => {
           <User size={40} className="text-gray-600" />
         </div>
         <span className="mt-2 font-semibold text-black">Name</span>
-        <button className="flex items-center text-red-500 hover:scale-125 transition ease-in-out duration-300">
+        <button className="flex items-center text-red-500 hover:scale-125 transition ease-in-out duration-300" onClick={handleLogout}>
           <LogOut size={20} className="mr-2 mt-5" />
           <p className="mt-5">Logout</p>
         </button>

@@ -5,6 +5,7 @@ import Sidebar from "@/app/components/Sidebar/Sidebar";
 import BookCard from "@/app/components/BookCard/BookCard";
 import BookPopup from "@/app/components/BookCardPopUp/BookCardPopUp";
 import { Menu } from "lucide-react";
+import axios from "axios";
 
 export default function Mylibrary() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -116,7 +117,7 @@ export default function Mylibrary() {
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 mt-4">
               {books.map((book, index) => (
                 <div key={index} onClick={() => handleBookClick(book)} className="cursor-pointer">
-                  <BookCard book={book} />
+                  {/* <BookCard book={book} /> */}
                 </div>
               ))}
             </div>

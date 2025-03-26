@@ -5,6 +5,7 @@ import { Home } from "lucide-react";
 import { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import Swal from "sweetalert2";
 
 export default function LoginPage() {
   const router = useRouter();

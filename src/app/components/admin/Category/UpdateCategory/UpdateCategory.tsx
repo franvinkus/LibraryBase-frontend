@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 // Interface untuk props komponen
 interface UpdateCategoryProps {
@@ -47,9 +48,15 @@ export default function UpdateCategory({ isOpen, onClose, categoryId }: UpdateCa
       });
 
       if (response.status === 200) {
-        alert("Category updated successfully!");
-        onClose();
-        window.location.reload();
+        Swal.fire({
+          title: "Good job!",
+          text: "Update Category Successfully!",
+          icon: "success",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.reload(); // Reload halaman setelah menekan OK
+          }
+        });
       }
     } catch (err) {
       setError("Failed to update category. Please try again.");
