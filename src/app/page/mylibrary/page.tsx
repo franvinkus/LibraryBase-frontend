@@ -74,7 +74,7 @@ export default function BorrowedBooksPage() {
   };
 
   const borrowedBooksWithDetails = borrowedBooks
-    .filter((borrowedBook) => borrowedBook.status !== "Returned") // Filter out returned books
+    .filter((borrowedBook) => borrowedBook.status !== "returned") // Filter out returned books
     .map((borrowedBook) => {
       const bookDetails = getBookDetailsFromCache(borrowedBook.bookId);
       return {

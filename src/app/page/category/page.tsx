@@ -63,7 +63,7 @@ export default function CategoryPage() {
         const today = new Date().toISOString().split("T")[0]; // Format: YYYY-MM-DD
 
         // Filter hanya buku yang `availabilityDate` kosong atau sama dengan tanggal hari ini
-        const filteredBooks = response.data.filter((book: any) => !book.availabilityDate || book.availabilityDate.split("T")[0] === today);
+        const filteredBooks = response.data.filter((book: any) => book.availibility === "True" || !book.availabilityDate || book.availabilityDate.split("T")[0] === today);
 
         setBooks(filteredBooks);
       } catch (err) {
