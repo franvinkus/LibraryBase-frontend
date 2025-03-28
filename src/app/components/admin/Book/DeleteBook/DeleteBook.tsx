@@ -21,15 +21,15 @@ export default function DeleteBook({ isOpen, onClose, bookId, title }: DeleteBoo
       setLoading(true);
       setError("");
 
-      const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://localhost:7055"; // Ganti dengan URL backend Anda
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://localhost:7055";
       const token = localStorage.getItem("authToken");
 
       if (!token) {
-        // Jika token tidak ditemukan
         setError("User session expired! Please login again.");
         setLoading(false);
         return;
       }
+
       const id = bookId;
       const response = await axios.delete(`${API_BASE_URL}/api/Books/Delete-Book/${id}`, {
         headers: {
@@ -49,8 +49,32 @@ export default function DeleteBook({ isOpen, onClose, bookId, title }: DeleteBoo
           }
         });
       }
-    } catch (err) {
-      setError("Failed to delete category");
+    } catch (err: any) {
+      console.error("Error deleting book:", err);
+
+      if (err.response && err.response.status === 500) {
+        const errorMessage = err.response.data?.message || "Failed to delete book.";
+
+        if (errorMessage.includes("Book is currently active")) {
+          Swal.fire({
+            title: "Cannot Delete",
+            text: "This book is currently active and cannot be deleted.",
+            icon: "warning",
+          });
+        } else {
+          Swal.fire({
+            title: "Cannot Delete",
+            text: "This book is currently active and cannot be deleted.",
+            icon: "warning",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              window.location.reload(); // Reload halaman setelah menekan OK
+            }
+          });
+        }
+      } else {
+        setError("Failed to delete book");
+      }
     } finally {
       setLoading(false);
     }

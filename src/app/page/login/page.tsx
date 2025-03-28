@@ -47,12 +47,26 @@ export default function LoginPage() {
         console.log("User Role:", localStorage.getItem("userRole"));
 
         if (msg.includes("Admin")) {
-          router.push("/page/admin/category");
+          Swal.fire({
+            icon: "success",
+            title: "LogIn Success",
+            text: "You have been LogIn as Admin successfully.",
+            showConfirmButton: false,
+            timer: 1500,
+          }).then(() => {
+            router.push("/page/admin/category");
+          });
         } else {
-          router.push("/page/main");
+          Swal.fire({
+            icon: "success",
+            title: "LogIn Success",
+            text: "You have been LogIn as Customer successfully.",
+            showConfirmButton: false,
+            timer: 1500,
+          }).then(() => {
+            router.push("/page/main");
+          });
         }
-
-        alert("✅ Login successful!");
       } else {
         setError("⚠ Response dari server kosong.");
       }
