@@ -1,131 +1,133 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Navbar from "@/app/components/Navbar/navbar";
 import Sidebar from "@/app/components/Sidebar/Sidebar";
 import BookCard from "@/app/components/BookCard/BookCard";
 import BookPopup from "@/app/components/BookCardPopUp/BookCardPopUp";
-import { Menu } from "lucide-react";
+import BookCardPopUpMyLibrary from "@/app/components/BookCardPopUpMyLibrary/BookCardPopUpMyLibrary";
+import { Book, Menu } from "lucide-react";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
-export default function Mylibrary() {
+export default function BorrowedBooksPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const [selectedBook, setSelectedBook] = useState({
-    title: "",
-    author: "",
-    description: "",
-    image: "",
-  });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const Router = useRouter();
 
-  // Dummy data buku
-  const books = [
-    {
-      title: "Harry Potter",
-      author: "J.K. Rowling",
-      description: "A story about a young wizard.",
-      image: "/harry-potter.jpg",
-    },
-    {
-      title: "The Hobbit",
-      author: "J.R.R. Tolkien",
-      description: "An adventure of a hobbit named Bilbo Baggins.",
-      image: "/the-hobbit.jpg",
-    },
-    {
-      title: "Rich Dad Poor Dad",
-      author: "Robert Kiyosaki",
-      description: "A book about financial education.",
-      image: "/rich-dad-poor-dad.jpg",
-    },
-    {
-      title: "Harry Potter",
-      author: "J.K. Rowling",
-      description: "A story about a young wizard.",
-      image: "/harry-potter.jpg",
-    },
-    {
-      title: "The Hobbit",
-      author: "J.R.R. Tolkien",
-      description: "An adventure of a hobbit named Bilbo Baggins.",
-      image: "/the-hobbit.jpg",
-    },
-    {
-      title: "Rich Dad Poor Dad",
-      author: "Robert Kiyosaki",
-      description: "A book about financial education.",
-      image: "/rich-dad-poor-dad.jpg",
-    },
-    {
-      title: "Harry Potter",
-      author: "J.K. Rowling",
-      description: "A story about a young wizard.",
-      image: "/harry-potter.jpg",
-    },
-    {
-      title: "The Hobbit",
-      author: "J.R.R. Tolkien",
-      description: "An adventure of a hobbit named Bilbo Baggins.",
-      image: "/the-hobbit.jpg",
-    },
-    {
-      title: "Rich Dad Poor Dad",
-      author: "Robert Kiyosaki",
-      description: "A book about financial education.",
-      image: "/rich-dad-poor-dad.jpg",
-    },
-  ];
+  type Book = {
+    bookId: string;
+    title: string;
+    author: string;
+    description: string;
+    imageUrl: string;
+    status: string;
+  };
 
-  // Fungsi untuk menampilkan popup
-  const handleBookClick = (book: typeof selectedBook) => {
+  type BorrowedBook = {
+    bookId: string;
+    borrowDate: string;
+    status: string;
+  };
+
+  const [books, setBooks] = useState<Book[]>([]);
+  const [selectedBook, setSelectedBook] = useState<Book | null>(null);
+  const [borrowedBooks, setBorrowedBooks] = useState<BorrowedBook[]>([]);
+
+  useEffect(() => {
+    if (!localStorage.getItem("authToken")) {
+      Router.push("/page/login");
+    }
+
+    const fetchBooks = async () => {
+      try {
+        const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://localhost:7055";
+        const token = localStorage.getItem("authToken");
+
+        if (!token) throw new Error("User session expired! Please login again.");
+
+        // Fetch all books
+        const booksResponse = await axios.get(`${API_BASE_URL}/api/Books/Get-Books`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setBooks(booksResponse.data);
+
+        // Fetch borrowed books
+        const borrowedResponse = await axios.get(`${API_BASE_URL}/api/Borrow/See-All-Borrow`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setBorrowedBooks(borrowedResponse.data);
+      } catch (err) {
+        console.error("Error fetching books:", err);
+        setError("Failed to load books. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBooks();
+  }, []);
+
+  const getBookDetailsFromCache = (bookId: string): Book | null => {
+    return books.find((book) => book.bookId === bookId) || null;
+  };
+
+  const borrowedBooksWithDetails = borrowedBooks
+    .filter((borrowedBook) => borrowedBook.status !== "returned") // Filter out returned books
+    .map((borrowedBook) => {
+      const bookDetails = getBookDetailsFromCache(borrowedBook.bookId);
+      return {
+        ...borrowedBook,
+        title: bookDetails?.title || "Unknown Title",
+        author: bookDetails?.author || "Unknown Author",
+        description: bookDetails?.description || "No description available",
+        imageUrl: bookDetails?.imageUrl || "",
+      };
+    });
+
+  const openPopup = (book: Book) => {
     setSelectedBook(book);
     setIsPopupOpen(true);
   };
 
   return (
     <div className="flex h-screen bg-gray-100">
-      {/* Sidebar */}
       <div className={`fixed inset-0 z-50 transform ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} transition-transform lg:relative lg:translate-x-0`}>
         <Sidebar />
       </div>
 
-      {/* Main Content */}
       <main className="flex-1 p-6 pt-6 lg:pt-16">
-        {/* Navbar */}
         <div className="flex items-center justify-between lg:hidden">
           <button onClick={() => setSidebarOpen(!sidebarOpen)} className="text-gray-700 p-2">
             <Menu size={24} />
           </button>
-          <h1 className="text-lg font-semibold">MyLibrary</h1>
+          <h1 className="text-lg font-semibold">Borrowed Books</h1>
         </div>
         <Navbar />
 
-        {/* Categories Section */}
         <section className="mt-6">
           <div className="bg-white p-6 rounded-lg shadow-md w-full">
-            <h2 className="text-xl font-bold text-black">Mylibrary</h2>
+            <h2 className="text-xl font-bold text-black">Borrowed Books</h2>
 
-            {/* Category Buttons */}
-            <div className="flex flex-wrap gap-2 mt-4">
-              {["All", "Fantasy", "Education", "Drama"].map((category) => (
-                <button key={category} className="px-4 py-2 bg-[#E4F0FE] text-gray-700 rounded-lg hover:bg-blue-600 hover:text-white">
-                  {category}
-                </button>
-              ))}
-            </div>
-
-            {/* Book Card Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 mt-4">
-              {books.map((book, index) => (
-                <div key={index} onClick={() => handleBookClick(book)} className="cursor-pointer">
-                  <BookCard book={book} />
-                </div>
-              ))}
-            </div>
+            {loading ? (
+              <p className="text-center text-gray-700 mt-4">Loading borrowed books...</p>
+            ) : error ? (
+              <p className="text-center text-red-500 mt-4">{error}</p>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 mt-4">
+                {borrowedBooksWithDetails.map((book, index) => (
+                  <div key={index} onClick={() => openPopup(book)} className="cursor-pointer">
+                    <BookCard book={book} />
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </section>
       </main>
 
-      {/* Popup Detail Buku */}
-      <BookPopup isOpen={isPopupOpen} onClose={() => setIsPopupOpen(false)} book={selectedBook} />
+      {selectedBook && <BookCardPopUpMyLibrary isOpen={isPopupOpen} onClose={() => setIsPopupOpen(false)} book={selectedBook} />}
     </div>
   );
 }

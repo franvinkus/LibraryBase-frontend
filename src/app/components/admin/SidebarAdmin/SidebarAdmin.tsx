@@ -1,9 +1,37 @@
 "use client";
 import { User, LogOut, Book, Download, Clock, List } from "lucide-react";
 import { useRouter } from "next/navigation";
+import Swal from "sweetalert2";
+import { useEffect } from "react";
+import { useState } from "react";
 
 const SidebarAdmin = () => {
   const router = useRouter();
+
+  const [userName, setUserName] = useState<string | null>(null);
+
+  const handleLogout = () => {
+    if (typeof window !== "undefined") {
+      localStorage.clear();
+    }
+    Swal.fire({
+      icon: "success",
+      title: "Logout Success",
+      text: "You have been logged out successfully.",
+      showConfirmButton: false,
+      timer: 1500,
+    }).then(() => {
+      router.push("/page/login");
+    });
+  };
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      // Pastikan kode hanya berjalan di client-side
+      const storedUserName = localStorage.getItem("userName");
+      setUserName(storedUserName);
+    }
+  }, []);
 
   return (
     <aside className="w-64 h-screen bg-white shadow-md p-6 mt-20 flex flex-col space-y-10">
@@ -12,8 +40,8 @@ const SidebarAdmin = () => {
         <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mt-5">
           <User size={40} className="text-gray-600" />
         </div>
-        <span className="mt-2 font-semibold text-black">Name</span>
-        <button className="flex items-center text-red-500 hover:scale-125 transition ease-in-out duration-300">
+        <span className="mt-2 font-semibold text-black">{userName || "Admin"}</span>
+        <button className="flex items-center text-red-500 hover:scale-125 transition ease-in-out duration-300" onClick={handleLogout}>
           <LogOut size={20} className="mr-2 mt-5" />
           <p className="mt-5">Logout</p>
         </button>
@@ -26,6 +54,11 @@ const SidebarAdmin = () => {
         <div className="flex items-center text-gray-700 hover:text-blue-600 hover:scale-125 cursor-pointer transition ease-in-out duration-300" onClick={() => router.push("/page/admin/category")}>
           <List size={20} className="mr-2" />
           Category
+        </div>
+
+        <div className="flex items-center text-gray-700 hover:text-blue-600 hover:scale-125 cursor-pointer transition ease-in-out duration-300" onClick={() => router.push("/page/admin/book")}>
+          <Book size={20} className="mr-2" />
+          Book List
         </div>
 
         <div className="flex items-center text-gray-700 hover:text-blue-600 hover:scale-125 cursor-pointer transition ease-in-out duration-300" onClick={() => router.push("/page/admin/manage")}>
