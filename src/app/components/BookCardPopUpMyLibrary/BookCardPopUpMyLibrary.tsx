@@ -33,7 +33,7 @@ export default function BookCardPopUpMyLibrary({ isOpen, onClose, book }: BookPo
         </div>
 
         {/* Detail Buku */}
-        <h2 className="text-xl font-bold mt-4">{book.title}</h2>
+        <h2 className="text-xl font-bold mt-4 text-black">{book.title}</h2>
         <p className="text-gray-600">{book.author}</p>
         <p className="text-sm text-gray-500 mt-2">{book.description}</p>
 
@@ -47,7 +47,13 @@ export default function BookCardPopUpMyLibrary({ isOpen, onClose, book }: BookPo
           {/* Status Buku */}
           <span
             className={`px-3 py-1 rounded-full text-sm font-medium ${
-              book.status === "pending" ? "bg-yellow-100 text-yellow-800 font-bold" : book.status === "borrowed" ? "bg-green-100 text-green-800 font-bold  " : book.status === "returned" ? "bg-black  text-white" : "bg-gray-100 text-gray-800"
+              book.status === "pending"
+                ? "bg-yellow-100 text-yellow-800 font-bold"
+                : book.status === "borrowed"
+                ? "bg-green-100 text-green-800 font-bold  "
+                : book.status === "returned"
+                ? "bg-gray-600  text-white"
+                : "bg-gray-100 text-gray-800"
             }`}
           >
             {book.status}
