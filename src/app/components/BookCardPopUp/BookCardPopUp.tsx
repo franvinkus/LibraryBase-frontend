@@ -54,7 +54,7 @@ export default function BookPopup({ isOpen, onClose, book }: BookPopupProps) {
       if (response.status === 200) {
         Swal.fire({
           title: "Good job!",
-          text: "Booking Book Successfully!",
+          text: "Request Borrow Book Successed",
           icon: "success",
         }).then((result) => {
           if (result.isConfirmed) {
@@ -77,11 +77,11 @@ export default function BookPopup({ isOpen, onClose, book }: BookPopupProps) {
           <X size={24} />
         </button>
 
-        <div className="w-full h-48 bg-gray-200 flex items-center justify-center rounded-lg">
+        <div className="w-full h-full bg-gray-200 flex items-center justify-center rounded-lg">
           {book.imageUrl ? <img src={book.imageUrl} alt={book.title} className="w-full h-full object-cover rounded-lg" /> : <span className="text-gray-400">No Image</span>}
         </div>
 
-        <h2 className="text-xl font-bold mt-4">{book.title}</h2>
+        <h2 className="text-xl font-bold mt-4 text-black">{book.title}</h2>
         <p className="text-gray-600">{book.author}</p>
         <p className="text-sm text-gray-500 mt-2">{book.description}</p>
 

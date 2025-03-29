@@ -19,7 +19,7 @@ export default function BookCard({ book }: BookCardProps) {
 
       {/* Konten Buku */}
       <div className="flex-grow flex flex-col justify-between">
-        <h3 className="text-md font-semibold mt-2 truncate">{book.title}</h3>
+        <h3 className="text-md  mt-2 truncate text-black font-bold text-2x1">{book.title}</h3>
         <p className="text-xs text-gray-500">{book.author}</p>
       </div>
     </div>

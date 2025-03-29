@@ -60,9 +60,13 @@ export default function DeleteManageUser({ isOpen, onClose, userId, bookingId, c
           title: "Cancelled!",
           text: "The booking has been cancelled successfully.",
           icon: "success",
+        }).then(() => {
+          if (onSuccess) {
+            onSuccess();
+          }
+          onClose();
+          window.location.reload();
         });
-        onClose();
-        if (onSuccess) onSuccess(); // Callback untuk refresh data
       }
     } catch (err) {
       console.error("Cancel error:", err);
@@ -86,11 +90,11 @@ export default function DeleteManageUser({ isOpen, onClose, userId, bookingId, c
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-md flex justify-center items-center z-50">
       <div className="bg-white rounded-lg p-6 w-full max-w-md">
-        <h3 className="text-lg font-bold mb-4">Cancel Booking</h3>
+        <h3 className="text-lg font-bold mb-4 text-black">Cancel Booking</h3>
 
-        <div className="mb-6 space-y-3">
+        <div className="mb-6 space-y-3 text-black">
           <p className="font-medium">User ID: {userId}</p>
           <p>Booking ID: {bookingId}</p>
           <p>
@@ -111,15 +115,8 @@ export default function DeleteManageUser({ isOpen, onClose, userId, bookingId, c
           <button type="button" className="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50" onClick={onClose} disabled={loading}>
             Cancel
           </button>
-          <button type="button" className="px-4 py-2 text-white bg-red-600 rounded-md hover:bg-red-700 disabled:opacity-50" onClick={handleDelete} disabled={loading}>
-            {loading ? (
-              <>
-                <span className="inline-block animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white mr-2"></span>
-                Cancelling...
-              </>
-            ) : (
-              "Confirm Cancel"
-            )}
+          <button onClick={handleDelete} className={`px-4 py-2 rounded-lg hover:scale-105 transition duration-300 ${loading ? "bg-gray-400 text-gray-700 cursor-not-allowed" : "bg-red-500 text-white hover:bg-red-900  "}`} disabled={loading}>
+            {loading ? "Cancelling..." : "Cancel Confirm"}
           </button>
         </div>
       </div>

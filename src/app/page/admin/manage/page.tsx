@@ -188,6 +188,7 @@ export default function AdminDashboardManage() {
                                       onClick={() => {
                                         setSelectedbokkingId(item.bookingId);
                                         setSelecteduserId(item.userId);
+                                        setSelectedStatus(item.status);
                                         setIsUpdateModalOpen(true);
                                       }}
                                     />
@@ -198,6 +199,7 @@ export default function AdminDashboardManage() {
                                       onClick={() => {
                                         setSelectedbokkingId(item.bookingId);
                                         setSelecteduserId(item.userId);
+                                        setSelectedStatus(item.status);
                                         setIsDeleteModalOpen(true);
                                       }}
                                     />

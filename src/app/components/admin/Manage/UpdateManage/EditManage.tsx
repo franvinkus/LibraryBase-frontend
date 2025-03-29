@@ -64,7 +64,8 @@ export default function UpdateManageUser({ isOpen, onClose, userId, bookingId, c
           text: `Status successfully updated to ${selectedOption}`,
           icon: "success",
         }).then(() => {
-          onClose(); // Tutup modal
+          onClose();
+          window.location.reload();
         });
       }
     } catch (err) {
@@ -83,11 +84,11 @@ export default function UpdateManageUser({ isOpen, onClose, userId, bookingId, c
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-md flex justify-center items-center z-50">
       <div className="bg-white rounded-lg p-6 w-full max-w-md">
-        <h3 className="text-lg font-bold mb-4">Update Booking Status</h3>
+        <h3 className="text-lg font-bold mb-4 text-black">Update Booking Status</h3>
 
-        <div className="mb-4">
+        <div className="mb-4 text-black ">
           <p className="font-medium">User ID: {userId}</p>
           <p>Booking ID: {bookingId}</p>
           <p>Current Status: {currentStatus}</p>
@@ -105,7 +106,7 @@ export default function UpdateManageUser({ isOpen, onClose, userId, bookingId, c
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
               disabled={loading}
             >
-              <span className="truncate">{selectedOption}</span>
+              <span className="truncate text-gray-600">{selectedOption}</span>
               <ChevronDown className={`h-5 w-5 text-gray-400 transition-transform ${isDropdownOpen ? "transform rotate-180" : ""}`} />
             </button>
           </div>

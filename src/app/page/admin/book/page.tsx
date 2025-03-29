@@ -62,7 +62,7 @@ export default function AdminDashboardBook() {
             <div className="bg-white shadow-lg rounded-lg p-6">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-lg font-bold text-black">Book List</h2>
-                <button className="bg-[#D9D9D9] p-2 rounded-lg hover:text-white hover:bg-blue-700 hover:scale-110 transition ease-in-out duration-300" onClick={() => setIsAddModalOpen(true)}>
+                <button className="bg-gray-800  text-white p-2 rounded-lg hover:text-white hover:bg-blue-700 hover:scale-110 transition ease-in-out duration-300" onClick={() => setIsAddModalOpen(true)}>
                   <Plus size={20} />
                 </button>
               </div>
