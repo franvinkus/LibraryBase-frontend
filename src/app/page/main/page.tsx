@@ -43,11 +43,11 @@ export default function Home() {
       try {
         const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://localhost:7055";
         const token = localStorage.getItem("authToken");
-        const userName = localStorage.getItem("userName");
 
         if (!token) {
           throw new Error("User session expired! Please login again.");
           Router.push("/");
+          return;
         }
 
         const response = await axios.get(`${API_BASE_URL}/api/Books/Get-Books`, {
@@ -60,8 +60,8 @@ export default function Home() {
 
         const today = new Date().toISOString().split("T")[0]; // Format: YYYY-MM-DD
 
-        // Filter hanya buku yang `availabilityDate` kosong atau sama dengan tanggal hari ini
-        const filteredBooks = response.data.filter((book: any) => !book.availabilityDate || book.availabilityDate.split("T")[0] === today);
+        // Filter buku berdasarkan `availability: "True"
+        const filteredBooks = response.data.filter((book: any) => book.availibility === "True");
 
         // Acak daftar buku dan ambil hanya 5 buku
         const shuffledBooks = [...filteredBooks]
