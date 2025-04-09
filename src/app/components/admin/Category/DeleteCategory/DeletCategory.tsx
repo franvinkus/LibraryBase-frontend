@@ -21,7 +21,7 @@ export default function DeleteCategory({ isOpen, onClose, categoryId, categoryNa
       setLoading(true);
       setError("");
 
-      const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://192.168.18.36:7055"; // Ganti dengan URL backend Anda
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:7055"; // Ganti dengan URL backend Anda
       const token = localStorage.getItem("authToken");
 
       if (!token) {

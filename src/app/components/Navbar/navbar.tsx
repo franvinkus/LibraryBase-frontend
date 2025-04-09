@@ -4,8 +4,12 @@ import { Home } from "lucide-react";
 import Link from "next/link";
 import { useSearch } from "@/app/context/SearchContext";
 
-export default function Navbar() {
-  const { searchTerm, setSearchTerm } = useSearch();
+interface NavbarProps {
+  searchTerm: string;
+  setSearchTerm: (value: string) => void;
+}
+
+export default function Navbar({ searchTerm, setSearchTerm }: NavbarProps) {
 
   return (
     <nav className="fixed top-0 left-0 w-full h-20 bg-white shadow-md z-50 flex justify-between items-center px-6">

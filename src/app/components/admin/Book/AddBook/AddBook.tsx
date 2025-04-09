@@ -14,7 +14,7 @@ export default function AddBook({ isOpen, onClose }: { isOpen: boolean; onClose:
   const [categories, setCategories] = useState<{ cateId: number; cateName: string }[]>([]);
   const [imgFile, setImgFile] = useState<File | null>(null);
 
-  const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://192.168.18.36:7055";
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:7055";
 
   useEffect(() => {
     const fetchCategories = async () => {

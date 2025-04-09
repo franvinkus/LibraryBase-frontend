@@ -16,7 +16,7 @@ export default function RegisterPage() {
 
   const handleRegister = async () => {
     try {
-      const response = await axios.post("http://192.168.18.36:7055/api/LibraryBase/Auth/SignUp/Customer", {
+      const response = await axios.post("http://localhost:7055:7055/api/LibraryBase/Auth/SignUp/Customer", {
         userName: username,
         password,
         email,

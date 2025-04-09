@@ -15,6 +15,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const Router = useRouter();
+  const [searchTerm, setSearchTerm] = useState("");
 
   const [selectedBook, setSelectedBook] = useState<{
     bookId: number;
@@ -41,7 +42,7 @@ export default function Home() {
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://192.168.18.36:7055";
+        const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:7055";
         const token = localStorage.getItem("authToken");
 
         if (!token) {
@@ -81,7 +82,11 @@ export default function Home() {
 
   const uniqueCategories = ["ALL", ...new Set(books.flatMap((book) => book.categoryNames))];
 
-  const filteredBooks = selectedCategory === "ALL" ? books : books.filter((book) => book.categoryNames.includes(selectedCategory));
+  const filteredBooks = books.filter((book) => {
+    const matchesCategory = selectedCategory === "ALL" || book.categoryNames.includes(selectedCategory);
+    const matchesSearch = book.title.toLowerCase().includes(searchTerm.toLowerCase()) || book.author.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
 
   const handleBookClick = (book: typeof selectedBook) => {
     setSelectedBook(book);
@@ -115,7 +120,7 @@ export default function Home() {
           </button>
           <h1 className="text-lg font-semibold">Home</h1>
         </div>
-        <Navbar />
+        <Navbar searchTerm={searchTerm} setSearchTerm={setSearchTerm}/>
 
         {/* Recommended Section */}
         <section className="mt-6">

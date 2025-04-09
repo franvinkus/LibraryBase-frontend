@@ -35,7 +35,7 @@ export default function BorrowedBooksPage() {
   const [books, setBooks] = useState<Book[]>([]);
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const [borrowedBooks, setBorrowedBooks] = useState<BorrowedBook[]>([]);
-  const { searchTerm } = useSearch();
+  const { searchTerm, setSearchTerm} = useSearch();
   useEffect(() => {
     if (!localStorage.getItem("authToken")) {
       Router.push("/page/login");
@@ -43,7 +43,7 @@ export default function BorrowedBooksPage() {
 
     const fetchBooks = async () => {
       try {
-        const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://192.168.18.36:7055";
+        const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:7055";
         const token = localStorage.getItem("authToken");
 
         if (!token) throw new Error("User session expired! Please login again.");
@@ -107,7 +107,7 @@ export default function BorrowedBooksPage() {
           </button>
           <h1 className="text-lg font-semibold">Borrowed Books</h1>
         </div>
-        <Navbar />
+        <Navbar searchTerm={searchTerm} setSearchTerm={setSearchTerm}/>
 
         <section className="mt-6">
           <div className="bg-white p-6 rounded-lg shadow-md w-full">

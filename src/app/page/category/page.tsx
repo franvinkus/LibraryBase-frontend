@@ -20,10 +20,10 @@ export default function CategoryPage() {
   const [error, setError] = useState<string | null>(null);
   const pollingInterval = useRef<NodeJS.Timeout | null>(null);
 
-  const { searchTerm } = useSearch(); // 🧠 Ambil nilai search dari context
+  const { searchTerm, setSearchTerm } = useSearch(); // 🧠 Ambil nilai search dari context
 
   const fetchBooks = useCallback(async () => {
-    const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://192.168.18.36:7055";
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:7055";
     const token = localStorage.getItem("authToken");
 
     if (!token) {
@@ -123,7 +123,7 @@ export default function CategoryPage() {
           <h1 className="text-lg font-semibold">Category</h1>
         </div>
 
-        <Navbar />
+        <Navbar searchTerm={searchTerm} setSearchTerm={setSearchTerm}/>
 
         <section className="mt-6">
           <div className="bg-white p-6 rounded-lg shadow-md w-full">
