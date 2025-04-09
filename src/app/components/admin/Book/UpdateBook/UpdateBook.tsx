@@ -21,7 +21,7 @@ export default function UpdateBook({ isOpen, onClose, bookId }: UpdateBookProps)
   const [bookImage, setBookImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
-  const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://localhost:7055";
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://192.168.18.36:7055";
 
   useEffect(() => {
     const fetchCategories = async () => {

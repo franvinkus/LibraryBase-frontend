@@ -27,7 +27,7 @@ export default function UpdateCategory({ isOpen, onClose, categoryId }: UpdateCa
       setLoading(true);
       setError("");
 
-      const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://localhost:7055";
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://192.168.18.36:7055";
       const token = localStorage.getItem("authToken");
 
       if (!token) {

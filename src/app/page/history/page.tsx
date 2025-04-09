@@ -8,6 +8,7 @@ import BookCardPopUpMyLibrary from "@/app/components/BookCardPopUpMyLibrary/Book
 import { Book, Menu } from "lucide-react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { useSearch } from "@/app/context/SearchContext";
 
 export default function HistoryBookPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -22,6 +23,7 @@ export default function HistoryBookPage() {
     author: string;
     description: string;
     imageUrl: string;
+    categoryNames?: string[];
     status: string;
   };
 
@@ -34,6 +36,7 @@ export default function HistoryBookPage() {
   const [books, setBooks] = useState<Book[]>([]);
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const [borrowedBooks, setBorrowedBooks] = useState<BorrowedBook[]>([]);
+  const { searchTerm } = useSearch();
 
   useEffect(() => {
     if (!localStorage.getItem("authToken")) {
@@ -42,7 +45,7 @@ export default function HistoryBookPage() {
 
     const fetchBooks = async () => {
       try {
-        const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://localhost:7055";
+        const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://192.168.18.36:7055";
         const token = localStorage.getItem("authToken");
 
         if (!token) throw new Error("User session expired! Please login again.");
@@ -73,8 +76,13 @@ export default function HistoryBookPage() {
     return books.find((book) => book.bookId === bookId) || null;
   };
 
+  const openPopup = (book: Book) => {
+    setSelectedBook(book);
+    setIsPopupOpen(true);
+  };
+
   const borrowedBooksWithDetails = borrowedBooks
-    .filter((borrowedBook) => borrowedBook.status === "returned") // Filter out returned books
+    .filter((borrowedBook) => borrowedBook.status === "returned")
     .map((borrowedBook) => {
       const bookDetails = getBookDetailsFromCache(borrowedBook.bookId);
       return {
@@ -83,13 +91,12 @@ export default function HistoryBookPage() {
         author: bookDetails?.author || "Unknown Author",
         description: bookDetails?.description || "No description available",
         imageUrl: bookDetails?.imageUrl || "",
-      };
+        categoryNames: bookDetails?.categoryNames || [],
+        status: borrowedBook.status,
+      } as Book;
     });
 
-  const openPopup = (book: Book) => {
-    setSelectedBook(book);
-    setIsPopupOpen(true);
-  };
+  const filteredBooks = borrowedBooksWithDetails.filter((book) => book.title.toLowerCase().includes(searchTerm.toLowerCase()) || book.author.toLowerCase().includes(searchTerm.toLowerCase()));
 
   return (
     <div className="flex h-screen bg-gray-100">
@@ -116,7 +123,7 @@ export default function HistoryBookPage() {
               <p className="text-center text-red-500 mt-4">{error}</p>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 mt-4">
-                {borrowedBooksWithDetails.map((book, index) => (
+                {filteredBooks.map((book, index) => (
                   <div key={index} onClick={() => openPopup(book)} className="cursor-pointer">
                     <BookCard book={book} />
                   </div>

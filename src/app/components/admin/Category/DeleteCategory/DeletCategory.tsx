@@ -21,7 +21,7 @@ export default function DeleteCategory({ isOpen, onClose, categoryId, categoryNa
       setLoading(true);
       setError("");
 
-      const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://localhost:7055"; // Ganti dengan URL backend Anda
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://192.168.18.36:7055"; // Ganti dengan URL backend Anda
       const token = localStorage.getItem("authToken");
 
       if (!token) {
@@ -39,15 +39,15 @@ export default function DeleteCategory({ isOpen, onClose, categoryId, categoryNa
       });
 
       if (response.status === 200) {
-            Swal.fire({
-                title: "Good job!",
-                text: "Delete Category Successfully!",
-                icon: "success",
-              }).then((result) => {
-                if (result.isConfirmed) {
-                  window.location.reload(); // Reload halaman setelah menekan OK
-                }
-              });
+        Swal.fire({
+          title: "Good job!",
+          text: "Delete Category Successfully!",
+          icon: "success",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.reload(); // Reload halaman setelah menekan OK
+          }
+        });
       }
     } catch (err) {
       setError("Failed to delete category");

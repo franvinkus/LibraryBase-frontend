@@ -21,7 +21,7 @@ export default function AddCategory({ isOpen, onClose }: { isOpen: boolean; onCl
     setError("");
 
     try {
-      const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://localhost:7055";
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://192.168.18.36:7055";
       const token = localStorage.getItem("authToken");
 
       console.log("JWT Token:", token);
@@ -48,7 +48,7 @@ export default function AddCategory({ isOpen, onClose }: { isOpen: boolean; onCl
       if (response.status === 200) {
         Swal.fire({
           title: "Good job!",
-          text: "Add Category Successfully!",  
+          text: "Add Category Successfully!",
           icon: "success",
         }).then((result) => {
           if (result.isConfirmed) {

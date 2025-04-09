@@ -32,7 +32,7 @@ export default function AdminDashboardManage() {
   const [selectedbookingId, setSelectedbokkingId] = useState<number | null>(null);
   const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
 
-  const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://localhost:7055";
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://192.168.18.36:7055";
 
   const fetchBorrowData = async (username: string = "", page: number = 1) => {
     setIsLoading(true);
