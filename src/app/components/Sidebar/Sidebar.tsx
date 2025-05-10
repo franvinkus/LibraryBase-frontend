@@ -1,9 +1,36 @@
 "use client";
 import { User, LogOut, Book, Download, Clock, List } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import Swal from "sweetalert2";
+import { useState } from "react";
 
 const Sidebar = () => {
   const router = useRouter();
+  const [userName, setUserName] = useState<string | null>(null);
+
+  const handleLogout = () => {
+    if (typeof window !== "undefined") {
+      localStorage.clear();
+    }
+    Swal.fire({
+      icon: "success",
+      title: "Logout Success",
+      text: "You have been logged out successfully.",
+      showConfirmButton: false,
+      timer: 1500,
+    }).then(() => {
+      router.push("/page/login");
+    });
+  };
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      // Pastikan kode hanya berjalan di client-side
+      const storedUserName = localStorage.getItem("userName");
+      setUserName(storedUserName);
+    }
+  }, []);
 
   return (
     <aside className="w-64 h-screen bg-white shadow-md p-6 mt-20 flex flex-col space-y-10">
@@ -12,8 +39,8 @@ const Sidebar = () => {
         <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mt-5">
           <User size={40} className="text-gray-600" />
         </div>
-        <span className="mt-2 font-semibold text-black">Name</span>
-        <button className="flex items-center text-red-500 hover:scale-125">
+        <span className="mt-2 font-semibold text-black">{userName || "Guest"}</span>
+        <button className="flex items-center text-red-500 hover:scale-125" onClick={handleLogout}>
           <LogOut size={20} className="mr-2 mt-5" />
           <p className="mt-5">Logout</p>
         </button>

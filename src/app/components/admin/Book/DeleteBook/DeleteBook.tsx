@@ -3,35 +3,35 @@ import { useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 
-interface DeleteCategoryProps {
+interface DeleteBookProps {
   isOpen: boolean;
   onClose: () => void;
-  categoryId: number | null;
-  categoryName: string | null;
+  bookId: number | null;
+  title: string | null;
 }
 
-export default function DeleteCategory({ isOpen, onClose, categoryId, categoryName }: DeleteCategoryProps) {
+export default function DeleteBook({ isOpen, onClose, bookId, title }: DeleteBookProps) {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
 
-  if (!isOpen || categoryId === null) return null;
+  if (!isOpen || bookId === null) return null;
 
   const handleDelete = async () => {
     try {
       setLoading(true);
       setError("");
 
-      const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:7055"; // Ganti dengan URL backend Anda
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:7055";
       const token = localStorage.getItem("authToken");
 
       if (!token) {
-        // Jika token tidak ditemukan
         setError("User session expired! Please login again.");
         setLoading(false);
         return;
       }
-      const id = categoryId;
-      const response = await axios.delete(`${API_BASE_URL}/api/LibraryBase/CRUD/${id}`, {
+
+      const id = bookId;
+      const response = await axios.delete(`${API_BASE_URL}/api/Books/Delete-Book/${id}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -41,7 +41,7 @@ export default function DeleteCategory({ isOpen, onClose, categoryId, categoryNa
       if (response.status === 200) {
         Swal.fire({
           title: "Good job!",
-          text: "Delete Category Successfully!",
+          text: "Delete Book Successfully!",
           icon: "success",
         }).then((result) => {
           if (result.isConfirmed) {
@@ -49,8 +49,32 @@ export default function DeleteCategory({ isOpen, onClose, categoryId, categoryNa
           }
         });
       }
-    } catch (err) {
-      setError("Failed to delete category");
+    } catch (err: any) {
+      console.error("Error deleting book:", err);
+
+      if (err.response && err.response.status === 500) {
+        const errorMessage = err.response.data?.message || "Failed to delete book.";
+
+        if (errorMessage.includes("Book is currently active")) {
+          Swal.fire({
+            title: "Cannot Delete",
+            text: "This book is currently active and cannot be deleted.",
+            icon: "warning",
+          });
+        } else {
+          Swal.fire({
+            title: "Cannot Delete",
+            text: "This book is currently active and cannot be deleted.",
+            icon: "warning",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              window.location.reload(); // Reload halaman setelah menekan OK
+            }
+          });
+        }
+      } else {
+        setError("Failed to delete book");
+      }
     } finally {
       setLoading(false);
     }
@@ -65,12 +89,12 @@ export default function DeleteCategory({ isOpen, onClose, categoryId, categoryNa
         </button>
 
         {/* Title */}
-        <h2 className="text-xl font-bold mb-4 text-center text-black">Delete Category</h2>
+        <h2 className="text-xl font-bold mb-4 text-center text-black">Delete Book</h2>
 
         {/* Input Fields */}
         <div className="mb-4">
-          <label className="block text-gray-700 font-medium mb-1">Categories Name</label>
-          <input type="text" className="w-full px-3 py-2 rounded-md bg-gray-200 focus:outline-none text-black" placeholder={categoryName ?? "Category Name"} readOnly value={categoryName ?? ""} />
+          <label className="block text-gray-700 font-medium mb-1">Title Book</label>
+          <input type="text" className="w-full px-3 py-2 rounded-md bg-gray-200 focus:outline-none text-black" placeholder={title ?? "Book Title"} readOnly value={title ?? ""} />
         </div>
 
         {/* Buttons */}

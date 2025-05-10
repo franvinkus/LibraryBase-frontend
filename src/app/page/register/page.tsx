@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import axios from "axios";
 import SignUpButton from "@/app/components/CustomButton/SignUp";
+import Swal from "sweetalert2";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -15,18 +16,33 @@ export default function RegisterPage() {
 
   const handleRegister = async () => {
     try {
-      const response = await axios.post("https://localhost:7055/api/LibraryBase/Auth/SignUp/Customer", {
+      const response = await axios.post("http://localhost:7055:7055/api/LibraryBase/Auth/SignUp/Customer", {
         userName: username,
         password,
         email,
       });
 
-      alert("Register successful!");
-      router.push("/page/login");
+      Swal.fire({
+        icon: "success",
+        title: "Register Success",
+        text: "You have been Register Successfully.",
+        showConfirmButton: false,
+        timer: 1500,
+      }).then(() => {
+        router.push("/page/admin/category");
+      });
       console.log(response.data); // Redirect setelah login sukses
     } catch (err) {
       if (axios.isAxiosError(err)) {
-        setError(err.response?.data?.message || "Login failed");
+        if (err.response && err.response.data && err.response.data.errors) {
+          // Ambil semua error dari response API
+          const errorMessages = Object.values(err.response.data.errors)
+            .flat() // Menggabungkan array nested menjadi satu array
+            .join("\n"); // Gabungkan pesan dengan newline
+          setError(errorMessages);
+        } else {
+          setError(err.response?.data?.message || "Email Sudah Terdaftar / Username sudah pernah digunakan");
+        }
       } else {
         setError("An unexpected error occurred");
       }

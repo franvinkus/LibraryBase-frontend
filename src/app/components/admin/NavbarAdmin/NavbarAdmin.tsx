@@ -2,12 +2,16 @@
 import { Search } from "lucide-react";
 import { Home } from "lucide-react";
 import Link from "next/link";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function NavbarAdmin() {
+
+
   return (
     <nav className="fixed top-0 left-0 w-full h-20 bg-white shadow-md z-50 flex items-center px-6">
       {/* Logo */}
-      <Link href="/page/admin/admin" className="flex items-center hover:scale-110">
+      <Link href="/page/admin/category" className="flex items-center hover:scale-110">
         <Home size={40} className="text-black" />
         <h1 className="text-4xl font-bold text-blue-600 ml-2">
           Library<span className="text-black">Base</span>
